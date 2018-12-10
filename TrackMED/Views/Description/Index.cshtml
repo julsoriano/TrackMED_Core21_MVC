@@ -1,0 +1,166 @@
+﻿@using Newtonsoft.Json;
+@using System.Text.RegularExpressions;
+
+@model IEnumerable<TrackMED.Models.Description>
+
+@{
+    ViewBag.Title = "Index: " + ViewBag.EntityType + "S";
+    var entType = ViewBag.EntityType + "S";
+}
+
+<h2>@entType</h2>
+
+
+<!--
+<style type="text/css" class="init">
+
+    td.details-control {
+        background: url('https://datatables.net/examples/resources/details_open.png') no-repeat center center;
+        cursor: pointer;
+    }
+
+    tr.shown td.details-control {
+        background: url('https://datatables.net/examples/resources/details_close.png') no-repeat center center;
+    }
+
+</style>
+-->
+<!--
+/* Copyright 2014 Evernote Corporation. All rights reserved. */
+
+<style id="style-1-cropbar-clipper">
+
+    .en-markup-crop-options {
+        top: 18px !important;
+        left: 50% !important;
+        margin-left: -100px !important;
+        width: 200px !important;
+        border: 2px rgba(255,255,255,.38) solid !important;
+        border-radius: 4px !important;
+    }
+
+        .en-markup-crop-options div div:first-of-type {
+            margin-left: 0px !important;
+        }
+</style>
+-->
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+<div id="example_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+    <div class="row">
+        <!-- other options: table-light -->
+        <table id="nestedTable" class="table-striped table-condensed table-bordered table-hover dataTable no-footer" cellspacing="0" width="100%" role="grid" aria-describedby="DataTables_Table_1_info" style="width: 100%;">
+            <thead>
+                <tr role="row">
+                    <th class="details-control sorting_disabled" rowspan="1" colspan="1" aria-label="" style="width: 9px;"></th>
+                    <th class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1">@Html.DisplayNameFor(model => model.Desc)</th>
+                    <th class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1">@Html.DisplayNameFor(model => model.Tag)</th>
+                    <th class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1">@Html.DisplayNameFor(model => model.CreatedAtUtc)</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="myTable">
+                @{bool initflag = true;
+                    var tableName = "";
+                    var itemJs = "";
+                    var modelName = "";
+
+                    @foreach (var item in @Model)
+                    {
+                        if (@initflag)
+                        {
+                            tableName = item.GetType().ToString();
+                            itemJs = JsonConvert.SerializeObject(item);
+                            var sPattern = "^TrackMED.Models.([A-Za-z0-9_]+)$";
+                            var m = Regex.Match(tableName, sPattern);
+                            modelName = m.Groups[1].Value;
+                            initflag = false;
+                        }
+
+                        // var itemJs2 = @Html.Raw(Json.Encode(item));  // https://stackoverflow.com/questions/36756829/pass-c-sharp-model-from-view-to-javascript
+                        // https://forums.asp.net/t/2054702.aspx?what+Html+Raw+and+Json+Encode+does+
+
+                        <tr role="row" rel="@item.Id@tableName">
+                            <td class="details-control glyphicon glyphicon-plus">
+                                <!-- <a href="#!" rel="item.Id" onclick="showComponents(this, 'Models')">+</a> -->
+                                <!-- <a asp-action="Index" asp-route-id="item.Id" >+</a> -->
+                            </td>
+                            <td>@Html.DisplayFor(modelItem => item.Desc)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Tag)</td>
+                            <td>@Html.DisplayFor(modelItem => item.CreatedAtUtc)</td>
+                            <td>
+                                <a href="#!" rel="@itemJs" onclick="editRecord(this, '@modelName')" class="editDialog">Edit</a> |
+                                <!-- in lieu of:
+                                <a asp-action="Edit" asp-route-id="@itemJs" onclick="editRecord(this, 'Descriptions')" class="editDialog">Edit</a> |
+                                which produces an 'HTTP Error 404.11 - Not Found' in function 'editRecord' of site.js
+                            -->
+
+                                <a href="#!" rel="@item.Id" onclick="deleteRecord(this, '@modelName')">Delete</a>
+                                <!-- <a asp-route-id="@item.Id" onclick="deleteRecord(this, 'Descriptions')" >Delete</a> -->
+                                <!-- <a asp-action="Details" asp-route-id="@item.Id">Details</a> | -->
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@Html.Partial("_IndexPartial", Model)
+
+<!--
+<div class="modal fade editDialog" id="dialog-edit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit Record</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+
+                    <form asp-action="Edit">
+                        <div class="form-horizontal modal-body">
+                            <h4>Description</h4>
+                            <hr />
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input type="hidden" value="@Html.DisplayNameFor(model => model.Id)" />
+
+                            <div class="form-group">
+                                <label class="col-md-4 control-label">@Html.DisplayNameFor(model => model.Desc)</label>
+                                <div class="col-md-8">
+                                    <input type="text" name="desc" id="desc" value="" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4 control-label">@Html.DisplayNameFor(model => model.Tag)</label>
+                                <div class="col-md-8">
+                                    <input type="text" name="tag" id="tag" value="" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4 control-label">@Html.DisplayNameFor(model => model.CreatedAtUtc)</label>
+                                <div class="col-md-8">
+                                    <input type="text" name="createdAtUtc" id="createdAtUtc" value="" />
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+-->

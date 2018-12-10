@@ -1,0 +1,68 @@
+﻿@using Newtonsoft.Json;
+@using System.Text.RegularExpressions;
+
+@model IEnumerable<TrackMED.Models.SystemTab>
+
+@{
+    ViewBag.Title = "Index: " + "SYSTEMS";
+    var entType = "SYSTEMS";
+}
+
+<h2>@entType</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+<div id="example_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+    <div class="row">
+        <table id="nestedTable" class="table-light table-striped table-condensed table-hover dataTable no-footer" cellspacing="0" width="100%" role="grid" aria-describedby="DataTables_Table_1_info" style="width: 100%;">
+            <thead>
+                <tr role="row">
+                    <th class="details-control sorting_disabled" rowspan="1" colspan="1" aria-label="" style="width: 9px;"></th>
+                    <th class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1">@Html.DisplayNameFor(model => model.imte)</th>
+                    <th class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1">@Html.DisplayNameFor(model => model.SystemsDescription)</th>
+                    <th class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1">@Html.DisplayNameFor(model => model.DeploymentDate)</th>
+                    <th class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1">@Html.DisplayNameFor(model => model.Location)</th>
+                    <th class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1">@Html.DisplayNameFor(model => model.ReferenceNo)</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="myTable">
+                @{bool initflag = true;
+                    var tableName = "";
+                    var itemJs = "";
+                    var modelName = "";
+
+                    @foreach (var item in @Model)
+                    {
+                        if (@initflag)
+                        {
+                            tableName = item.GetType().ToString();
+                            itemJs = JsonConvert.SerializeObject(item);
+                            var sPattern = "^TrackMED.Models.([A-Za-z0-9_]+)$";
+                            var m = Regex.Match(tableName, sPattern);
+                            modelName = m.Groups[1].Value;
+                            initflag = false;
+                        }
+                        <tr role="row" rel="@item.Id@tableName">
+                            <td class="details-control glyphicon glyphicon-plus"></td>
+                            <td>@Html.DisplayFor(modelItem => item.imte)</td>
+                            <td>@Html.DisplayFor(modelItem => item.SystemsDescription.Desc)</td>
+                            <td>@Html.DisplayFor(modelItem => item.DeploymentDate)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Location.Desc)</td>
+                            <td>@Html.DisplayFor(modelItem => item.ReferenceNo)</td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@Html.Partial("_IndexPartial", Model)

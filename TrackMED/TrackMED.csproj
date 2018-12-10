@@ -5,7 +5,34 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\Manage\**" />
+    <Content Remove="Views\Manage\**" />
+    <EmbeddedResource Remove="Views\Manage\**" />
+    <None Remove="Views\Manage\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controllers\ManageController.cs" />
+    <Compile Remove="Controllers\SystemsDescriptionController Original.cs" />
+    <Compile Remove="Extensions\CredentialManager.cs" />
+    <Compile Remove="Extensions\EmailSink.cs" />
+    <Compile Remove="Extensions\EmailSinkExtensions.cs" />
+    <Compile Remove="Extensions\PrefixEventTextFormatter.cs" />
+    <Compile Remove="Services\EntityService Original.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Views\Description\Index - Copy 1.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="Serilog" Version="2.7.1" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="2.0.2" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="3.0.1" />
+    <PackageReference Include="Serilog.Sinks.Email" Version="2.3.0" />
+    <PackageReference Include="Serilog.Sinks.MongoDB" Version="3.1.0" />
   </ItemGroup>
 
 </Project>

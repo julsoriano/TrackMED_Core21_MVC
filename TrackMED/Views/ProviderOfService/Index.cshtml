@@ -1,0 +1,58 @@
+﻿@using Newtonsoft.Json;
+@using System.Text.RegularExpressions;
+
+@model IEnumerable<TrackMED.Models.ProviderOfService>
+
+@{
+    ViewBag.Title = "Index: " + ViewBag.EntityType + "S";
+    var entType = "SERVICE PROVIDERS";
+}
+
+<h2>@entType</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+<table id="nestedTable" class="table-light table-striped table-condensed table-hover dataTable no-footer" cellspacing="0" width="100%" role="grid" aria-describedby="DataTables_Table_1_info" style="width: 100%;">
+    <thead>
+        <tr role="row">
+            <th class="details-control sorting_disabled" rowspan="1" colspan="1" aria-label="" style="width: 9px;"></th>
+            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1">@Html.DisplayNameFor(model => model.Desc)</th>
+            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1">@Html.DisplayNameFor(model => model.CreatedAtUtc)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody id="myTable">
+        @{bool initflag = true;
+            var tableName = "";
+            var itemJs = "";
+            var modelName = "";
+
+            @foreach (var item in @Model)
+            {
+                if (@initflag)
+                {
+                    tableName = item.GetType().ToString();
+                    itemJs = JsonConvert.SerializeObject(item);
+                    var sPattern = "^TrackMED.Models.([A-Za-z0-9_]+)$";
+                    var m = Regex.Match(tableName, sPattern);
+                    modelName = m.Groups[1].Value;
+                    initflag = false;
+                }
+
+                <tr role="row" rel="@item.Id@tableName">
+                    <td class="details-control glyphicon glyphicon-plus"></td>
+                    <td>@Html.DisplayFor(modelItem => item.Desc)</td>
+                    <td>@Html.DisplayFor(modelItem => item.CreatedAtUtc)</td>
+                    <td>
+                        <a href="#!" rel="@itemJs" onclick="editRecord(this, '@modelName')" class="editDialog">Edit</a> |
+                        <a href="#!" rel="@item.Id" onclick="deleteRecord(this, '@modelName')">Delete</a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@Html.Partial("_IndexPartial", Model)

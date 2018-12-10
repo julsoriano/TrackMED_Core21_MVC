@@ -1,0 +1,76 @@
+﻿@using Newtonsoft.Json;
+@model TrackMED.ViewModels.EntityViewModel<IEntityVM>
+@* @model TrackMED.ViewModels.EntityViewModel<Description>--> *@
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<style type="text/css" class="init">
+    td.details-control {
+        background: url('https://datatables.net/examples/resources/details_open.png') no-repeat center center;
+        cursor: pointer;
+    }
+
+    tr.shown td.details-control {
+        background: url('https://datatables.net/examples/resources/details_close.png') no-repeat center center;
+    }
+</style>
+
+<h2>DESCRIPTIONS</h2>
+
+<p>
+    <!-- @Html.ActionLink("Create New", "Create") -->
+    <a asp-action="Create" id="openDialog">Create New</a>
+</p>
+
+<div id="example_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+    <div class="row">
+        <table id="nestedTable" class="table-light table-striped table-condensed table-hover dataTable no-footer" cellspacing="0" width="100%" role="grid" aria-describedby="DataTables_Table_1_info" style="width: 100%;">
+            <thead>
+                <tr role="row">
+                    <th class="details-control sorting_disabled" rowspan="1" colspan="1" aria-label="" style="width: 9px;"></th>
+                    <th class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1">Desc)</th>
+                    <th class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1">Tag)</th>
+                    <th class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1">CreatedAtUtc</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="myTable">
+                @foreach (var item in Model.EntityItems)
+
+                {
+                    var tableName = " " + item.GetType();
+                    var itemJs = JsonConvert.SerializeObject(item);
+
+                    // var itemJs = Html.Raw(Json.Encode(item));  // https://stackoverflow.com/questions/36756829/pass-c-sharp-model-from-view-to-javascript
+                    // https://forums.asp.net/t/2054702.aspx?what+Html+Raw+and+Json+Encode+does+
+
+                    <tr role="row" rel="@item.Id@tableName">
+                        <td class="details-control glyphicon glyphicon-plus">
+                            <!-- <a href="#!" rel="item.Id" onclick="showComponents(this, 'Models')">+</a> -->
+                            <!-- <a asp-action="Index" asp-route-id="item.Id" >+</a> -->
+                        </td>
+                        <td>@Html.DisplayFor(modelItem => item.Desc)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Tag)</td>
+                        <td>@Html.DisplayFor(modelItem => item.CreatedAtUtc)</td>
+                        <td>
+                            <a href="#!" rel="@itemJs" onclick="editRecord(this, 'Descriptions')" class="editDialog">Edit</a> |
+                            <!-- in lieu of:
+                                <a asp-action="Edit" asp-route-id="@itemJs" onclick="editRecord(this, 'Descriptions')" class="editDialog">Edit</a> |
+                                which produces an 'HTTP Error 404.11 - Not Found' in function 'editRecord' of site.js
+                            -->
+
+                            <a href="#!" rel="@item.Id" onclick="deleteRecord(this, 'Descriptions')">Delete</a>
+                            <!-- <a asp-route-id="@item.Id" onclick="deleteRecord(this, 'Descriptions')" >Delete</a> -->
+                            <!-- <a asp-action="Details" asp-route-id="@item.Id">Details</a> | -->
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@Html.Partial("_IndexPartial", Model)

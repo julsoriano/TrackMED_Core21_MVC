@@ -1,0 +1,50 @@
+﻿
+<div id="dialog-edit" title="Edit Record" style="display: none">
+    <form asp-action="Edit">
+        <div class="form-horizontal modal-body">
+            <h4 id="tableName"></h4>
+            <hr />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input hidden name="id" id="id" />
+
+            <div class="form-group">
+                <label class="col-md-4 control-label">Desc</label>
+                <div class="col-md-8">
+                    <input type="text" name="desc" id="desc" value="" />
+                </div>
+            </div>
+            <div id="tagDiv" class="form-group">
+                <label class="col-md-4 control-label">Tag</label>
+                <div class="col-md-8">
+                    <input type="text" name="tag" id="tag" value="" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label">CreatedAtUtc</label>
+                <div class="col-md-8">
+                    <input type="text" name="createdAtUtc" id="createdAtUtc" value="" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>
+            </div>
+            <div>
+                <!--<a asp-action="Index">Back to List</a>-->
+                <!--<a href="#" onclick="document.getElementById('dialog-edit').style.display='none'">Back to List</a> -->
+            </div>
+
+        </div>
+    </form>
+
+    
+</div>
+
+<div id="dialog-confirm" title="Delete Record" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        Are you sure you want to delete this?
+    </p>
+</div>
