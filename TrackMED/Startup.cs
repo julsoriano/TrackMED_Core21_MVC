@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 using Serilog;
 using Serilog.Events;
@@ -23,8 +24,12 @@ namespace TrackMED
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        public Startup(IConfiguration configuration)
         {
+            Configuration = configuration;
+
+            Serilog.Debugging.SelfLog.Enable(Console.WriteLine);
+            /*
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
@@ -35,19 +40,19 @@ namespace TrackMED
                 // For more details on using the user secret store see http://go.microsoft.com/fwlink/?LinkID=532709
                 //builder.AddUserSecrets();
             }
+            
 
             builder.AddEnvironmentVariables();
             Configuration = builder.Build();
+            */
 
             EmailConnectionInfo info = new EmailConnectionInfo()
             {
                 EmailSubject = "Test Serilog",
-                ToEmail = "jul_soriano@yahoo.com",
-
-                
+                ToEmail = "jul_soriano@yahoo.com",            
                 FromEmail = "elijahpne@gmail.com",
                 MailServer = "smtp.gmail.com", // "smtp.live.com"
-                NetworkCredentials = new NetworkCredential("elijahpne@gmail.com", "Proverb16:6"),
+                NetworkCredentials = new NetworkCredential("elijahpne@gmail.com", "acts15:23GOOG"),
                 Port = 587,
                 
                 /*
@@ -64,15 +69,18 @@ namespace TrackMED
             // http://sourcebrowser.io/Browse/serilog/serilog/src/Serilog.Sinks.Email/LoggerConfigurationEmailExtensions.cs
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Warning()
+                .ReadFrom.Configuration(Configuration)
+                .WriteTo.Console()
                 //.WriteTo.LiterateConsole()
                 //.WriteTo.RollingFile("logs\\trackmed-{Date}.txt")
-                .WriteTo.Email(info, restrictedToMinimumLevel: LogEventLevel.Warning)   // https://github.com/serilog/serilog/wiki/Configuration-Basics#overriding-per-sink
-                                                                                        //.WriteTo.Seq("http://localhost:5341/")
+                // .WriteTo.Email(info, restrictedToMinimumLevel: LogEventLevel.Warning)   // https://github.com/serilog/serilog/wiki/Configuration-Basics#overriding-per-sink
+                //.WriteTo.Seq("http://localhost:5341/")
                 .WriteTo.MongoDBCapped(uriMongoDB, collectionName: "logsTrackMED")  // https://github.com/serilog/serilog-sinks-mongodb
                 .CreateLogger();
 
             Log.Warning("TrackMED_Core21_MVC is launched");
         }
+
         /*
         public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
@@ -92,7 +100,7 @@ namespace TrackMED
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             // Add our Config object so it can be injected; needs "Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0"
             // See http://stackoverflow.com/questions/36893326/read-a-value-from-appsettings-json-in-1-0-0-rc1-final
@@ -102,14 +110,14 @@ namespace TrackMED
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
+            // loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            // loggerFactory.AddDebug();
             //loggerFactory.AddEmail(, LogLevel.Critical);
 
             // See https://www.towfeek.se/2016/06/structured-logging-with-aspnet-core-using-serilog-and-seq/
-            loggerFactory.AddSerilog();     // requires Serilog.Extensions,Logging
+            // loggerFactory.AddSerilog();     // requires Serilog.Extensions,Logging
 
             if (env.IsDevelopment())
             {
@@ -125,12 +133,33 @@ namespace TrackMED
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
+            /* Migrating from .Net Core 2.2 to 3.0, See https://docs.microsoft.com/en-us/aspnet/core/migration/22-to-30?view=aspnetcore-3.0&tabs=visual-studio
+                 or See: https://www.evernote.com/shard/s102/nl/11219721/b69c73f9-4dbe-4688-baef-1513c808e046
+
+               Replaces useMVC
+            */
+            app.UseRouting();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                /* Note: 
+                 * There is no action in StatusController named 'Index'. 
+                 * Routing probably looks at the signature rather than the action name
+                      so this defaults to GetAllAsync which has the specified signature.
+                 * Works in conjunction with launchsettings.json. THIS JSON MUST BE SPECIFIED
+                */
+            });
+
+            /*
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+            */
         }
     }
 }

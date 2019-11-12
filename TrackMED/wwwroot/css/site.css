@@ -64,7 +64,7 @@ textarea {
     padding-left: 0.5em;
 }
 
-/* Added */
+/* Added 
 .table-component > thead > tr > th,
 .table-component > tbody > tr > th,
 .table-component > tfoot > tr > th,
@@ -75,7 +75,7 @@ textarea {
     font-size: smaller !important;
     vertical-align: top;
     font-weight:bold !important
-} 
+} */
 
 /* Added */
 .table-light > thead > tr > th,

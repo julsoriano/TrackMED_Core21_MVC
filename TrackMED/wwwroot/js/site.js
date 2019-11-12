@@ -735,7 +735,7 @@ function showRelatedComponents(data) {
     nestedTable =
         '<tr>' +
             '<td colspan="4">' +
-                '<table class="table table-striped table-condensed table-hover table-component" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
+                '<table class="table table-striped table-condensed table-hover table-light" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
                     '<thead>' +
                         '<tr>' +
                             '<th>' + 'Index' + '</th>' +
