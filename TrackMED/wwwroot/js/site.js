@@ -975,6 +975,8 @@ $(document).ready(function () {
             tr.removeClass('shown');
             td.removeClass('glyphicon-minus');
             td.addClass('glyphicon-plus');
+            td.setAttribute("colspan", "5");
+            
         }
         else {
             // Open this row
@@ -986,6 +988,7 @@ $(document).ready(function () {
             tr.addClass('shown');
             td.removeClass('glyphicon-plus');
             td.addClass('glyphicon-minus');
+            td.setAttribute("colspan", "5");
         }
     });
 

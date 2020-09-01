@@ -882,18 +882,24 @@ namespace TrackMED.Controllers
         {
             List<SystemsDescription> descRecords =  _systemsdescriptionService.GetEntitiesAsync().Result;
             ViewBag.SystemsDescriptionID = new SelectList(descRecords.OrderBy(x => x.Desc), "Id", "Desc");
+            Console.WriteLine("# Desc Records: " + descRecords.Count);
 
             List<Owner> ownerRecords =  _ownerService.GetEntitiesAsync().Result;
             ViewBag.OwnerID = new SelectList(ownerRecords.OrderBy(x => x.Desc), "Id", "Desc");
+            Console.WriteLine("# Owner Records: " + ownerRecords.Count);
 
             List<Location> locationRecords =_locationService.GetEntitiesAsync().Result;
             ViewBag.LocationID = new SelectList(locationRecords.OrderBy(x => x.Desc), "Id", "Desc");
+            Console.WriteLine("# Location Records: " + locationRecords.Count);
 
             // select only components that are not yet commissioned
             List<Component> compRecords = _componentService.GetEntitiesAsync().Result;
+            Console.WriteLine("# Components: " + compRecords.Count);
+
+            // https://stackoverflow.com/questions/1748047/multiple-where-clauses-in-lambda-expressions
             var items = compRecords
-                        .OrderBy(x => x.Description.Desc)
-                        .Where(x => String.IsNullOrEmpty(x.imteModule));
+                    .Where(x => String.IsNullOrEmpty(x.imteModule) && x.Description != null )
+                    .OrderBy(x => x.Description.Desc);
 
             // create lookup table with key = Description and value = IEnumerable<Component>
             ILookup<string, Component> lookup = items

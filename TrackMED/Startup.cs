@@ -100,7 +100,8 @@ namespace TrackMED
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            // services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            services.AddRazorPages();
 
             // Add our Config object so it can be injected; needs "Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0"
             // See http://stackoverflow.com/questions/36893326/read-a-value-from-appsettings-json-in-1-0-0-rc1-final
