@@ -8,7 +8,7 @@
     var entType = ViewBag.EntityType + "S";
 }
 
-<h2>@entType</h2>
+<h2>ACTIVITY TYPES</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -40,6 +40,8 @@
                     modelName = m.Groups[1].Value;
                     initflag = false;
                 }
+                else
+                { itemJs = JsonConvert.SerializeObject(item); }
 
                 <tr role="row" rel="@item.Id@tableName">
                     <td class="details-control glyphicon glyphicon-plus"></td>

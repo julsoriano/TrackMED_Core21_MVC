@@ -78,6 +78,8 @@
                             modelName = m.Groups[1].Value;
                             initflag = false;
                         }
+                        else
+                        { itemJs = JsonConvert.SerializeObject(item); }
 
                         // var itemJs2 = @Html.Raw(Json.Encode(item));  // https://stackoverflow.com/questions/36756829/pass-c-sharp-model-from-view-to-javascript
                         // https://forums.asp.net/t/2054702.aspx?what+Html+Raw+and+Json+Encode+does+

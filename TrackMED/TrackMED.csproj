@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <Content Remove="Views\Description\Index - Copy 1.cshtml" />
+    <Content Remove="Views\Owner\Index Bad.cshtml" />
   </ItemGroup>
 
   <ItemGroup>

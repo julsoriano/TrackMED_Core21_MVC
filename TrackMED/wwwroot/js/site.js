@@ -52,12 +52,12 @@ function editRecord(editthis, modelName) {
 
     $(".modal-body #createdAtUtc").val(obj.createdAtUtc);
 
-    // open edit dialog
+    // configure edit dialog
     $("#dialog-edit").dialog({
         title: 'Edit Record',
         autoOpen: false,
         resizable: false,
-        height: "auto",
+        height: "auto", // "auto'
         width: 400,
         show: { effect: 'drop', direction: "up" },
         modal: true,
@@ -88,13 +88,14 @@ function editRecord(editthis, modelName) {
         }
     });
 
+    // then open
     $("#dialog-edit").dialog('open');
     return false;
 }
 
 function editConfirmed(editthis, modelName, entity) {
-    var url = "/" + modelName + "/Edit";
-
+    var url = "/" + modelName + "/Edit"; // or @Url.Action("Edit")
+    
     //var entity = JSON.stringify($('form').serializeObject());
 
     // Send the data using post. See https://api.jquery.com/jquery.post/
@@ -103,8 +104,7 @@ function editConfirmed(editthis, modelName, entity) {
     var posting = 
         $.ajax({
           type: "POST",
-          url: url,
-          // https://stackoverflow.com/questions/15317856/asp-net-mvc-posting-json
+          url: url, // or, url: "@Url.Action('Edit')", // https://stackoverflow.com/questions/15317856/asp-net-mvc-posting-json
           data: { "id" : entity.id, "desc": entity.desc, "tag": entity.tag, "createdAtUtc": entity.createdAtUtc},
           //contentType: "application/json; charset=utf-8",
           accept: "application/json"

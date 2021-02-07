@@ -41,6 +41,8 @@
                     modelName = m.Groups[1].Value;
                     initflag = false;
                 }
+                else
+                { itemJs = JsonConvert.SerializeObject(item); }
 
                 <tr role="row" rel="@item.Id@tableName">
                     <td class="details-control glyphicon glyphicon-plus"></td>
